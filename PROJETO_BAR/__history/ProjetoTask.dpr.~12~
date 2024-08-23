@@ -1,0 +1,24 @@
+program ProjetoTask;
+
+uses
+  Vcl.Forms,
+  UfrmPessoa in 'UfrmPessoa.pas' {FrmPessoa},
+  DmConexao in 'DM\DmConexao.pas' {dm: TDataModule},
+  UProfissao in 'Cadastros\UProfissao.pas' {FrmProfissao},
+  UConfiguracao in 'CONFIGURACAO\UConfiguracao.pas' {FrmConfiguracao},
+  UTelaRelatorioPrincipalCliente in 'RELATORIOS\UTelaRelatorioPrincipalCliente.pas' {FrmRelatorios},
+  URelatorioListagemDePessoas in 'RELATORIOS\URelatorioListagemDePessoas.pas' {Form1};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFrmPessoa, FrmPessoa);
+  Application.CreateForm(Tdm, dm);
+  Application.CreateForm(TFrmProfissao, FrmProfissao);
+  Application.CreateForm(TFrmConfiguracao, FrmConfiguracao);
+  Application.CreateForm(TFrmRelatorios, FrmRelatorios);
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

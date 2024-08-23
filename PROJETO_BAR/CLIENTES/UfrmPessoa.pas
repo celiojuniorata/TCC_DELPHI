@@ -1,0 +1,272 @@
+unit UfrmPessoa;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls,
+  Vcl.DBCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, DmConexao, Vcl.Menus, UProfissao,
+  REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope,
+  UConfiguracao;
+
+type
+  TFrmPessoa = class(TForm)
+    dbNome: TDBEdit;
+    dbLogradouro: TDBEdit;
+    dbTelefone: TDBEdit;
+    dbEmail: TDBEdit;
+    dbDataNasc: TDBEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    pnlPessoas: TPanel;
+    DBGrid1: TDBGrid;
+    btnSalvar: TButton;
+    btnEditar: TButton;
+    btnDeletar: TButton;
+    btnCancelar: TButton;
+    btnNovo: TButton;
+    dbID: TDBEdit;
+    Label6: TLabel;
+    Label7: TLabel;
+    btnPesquisar: TButton;
+    edtPesquisar: TEdit;
+    btnProximo: TButton;
+    btnPrimeiro: TButton;
+    btnUltimo: TButton;
+    dbCPF: TDBEdit;
+    Label8: TLabel;
+    dbCEP: TDBEdit;
+    Label9: TLabel;
+    dbBairro: TDBEdit;
+    Label10: TLabel;
+    dbComplemento: TDBEdit;
+    dbIBGE: TDBEdit;
+    Label11: TLabel;
+    Label12: TLabel;
+    MainMenu1: TMainMenu;
+    Cadastros1: TMenuItem;
+    Prof: TMenuItem;
+    Label13: TLabel;
+    RESTClient1: TRESTClient;
+    RESTRequest1: TRESTRequest;
+    RESTResponse1: TRESTResponse;
+    dbCidade: TDBEdit;
+    Label14: TLabel;
+    lkCmbProf: TDBLookupComboBox;
+    dbNumero: TDBEdit;
+    Label15: TLabel;
+    lbEstado: TLabel;
+    lkCmbEstado: TDBLookupComboBox;
+    Parmetros1: TMenuItem;
+    Parametros: TMenuItem;
+    Relatrios1: TMenuItem;
+    procedure btnNovoClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure btnEditarClick(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+    procedure btnDeletarClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnPesquisarClick(Sender: TObject);
+    procedure btnProximoClick(Sender: TObject);
+    procedure btnPrimeiroClick(Sender: TObject);
+    procedure btnUltimoClick(Sender: TObject);
+    procedure ProfClick(Sender: TObject);
+    procedure ParametrosClick(Sender: TObject);
+    procedure Relatrios1Click(Sender: TObject);
+  private
+    procedure Edicao(Enable: Boolean);
+    procedure BtnPadrao;
+  public
+  end;
+
+var
+  FrmPessoa: TFrmPessoa;
+
+implementation
+
+{$R *.dfm}
+
+uses UTelaRelatorioPrincipalCliente;
+
+
+procedure TFrmPessoa.btnCancelarClick(Sender: TObject);
+begin
+  if (dm.cdsPessoa.State in [dsInsert, dsEdit]) then
+  begin
+    if MessageDlg('Tem certeza que deseja cancelar a operação?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      begin
+        dm.cdsPessoa.Cancel;
+        Edicao(False);
+      end;
+  end;
+
+ BtnPadrao;
+end;
+
+
+procedure TFrmPessoa.btnDeletarClick(Sender: TObject);
+begin
+  if MessageDlg('Tem certeza que deseja deletar o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      dm.cdsPessoa.Delete;
+      showMessage('Deletado com sucesso!');
+    end;
+
+  BtnPadrao;
+end;
+
+
+procedure TFrmPessoa.btnEditarClick(Sender: TObject);
+begin
+  dm.cdsPessoa.Edit;
+  Edicao(True);
+  btnEditar.Enabled := False;
+  btnDeletar.Enabled := False;
+  btnNovo.Enabled := False;
+  btnSalvar.Enabled := True;
+  btnCancelar.Enabled := True;
+end;
+
+
+procedure TFrmPessoa.btnNovoClick(Sender: TObject);
+begin
+
+  if not dm.cdsPessoa.Active then
+    dm.cdsPessoa.Open;
+
+  dm.cdsPessoa.Append;
+
+  Edicao(True);
+
+  dbNome.SetFocus;
+  btnCancelar.Enabled := True;
+  btnNovo.Enabled := False;
+  btnEditar.Enabled := False;
+  btnDeletar.Enabled := False;
+  btnSalvar.Enabled := true;
+end;
+
+
+procedure TFrmPessoa.BtnPadrao;
+begin
+  btnNovo.Enabled := True;
+  btnEditar.Enabled := True;
+  btnDeletar.Enabled := True;
+  btnCancelar.Enabled := False;
+  btnSalvar.Enabled := False;
+end;
+
+
+procedure TFrmPessoa.btnSalvarClick(Sender: TObject);
+begin
+
+  if dm.cdsPessoa.State in [dsInsert] then
+    begin
+      dm.cdsPessoa.Post;
+      ShowMessage('Valor inserido com sucesso!');
+    end;
+
+  if dm.cdsPessoa.State in [dsEdit] then
+    begin
+      dm.cdsPessoa.Post;
+      ShowMessage('Editado com sucesso!');
+    end;
+
+  Edicao(False);
+  BtnPadrao;
+end;
+
+
+procedure TFrmPessoa.btnUltimoClick(Sender: TObject);
+begin
+  DBGrid1.DataSource.DataSet.Last;
+  BtnPadrao;
+end;
+
+
+procedure TFrmPessoa.btnPesquisarClick(Sender: TObject);
+begin
+
+  if dm.cdsPessoa.Locate('NOME', edtPesquisar.text, []) then
+    ShowMessage('Pessoa Localizado!')
+  else
+      ShowMessage('Pessoa não localizado!');
+      edtPesquisar.SetFocus;
+end;
+
+
+procedure TFrmPessoa.btnPrimeiroClick(Sender: TObject);
+begin
+  DBGrid1.DataSource.DataSet.First;
+  BtnPadrao;
+end;
+
+
+procedure TFrmPessoa.btnProximoClick(Sender: TObject);
+begin
+  DBGrid1.DataSource.DataSet.Next;
+  BtnPadrao;
+end;
+
+
+procedure TFrmPessoa.DBGrid1CellClick(Column: TColumn);
+begin
+  BtnPadrao;
+end;
+
+
+procedure TFrmPessoa.Edicao(Enable: Boolean);
+var
+I: Integer;
+begin
+    for I := 0 to FrmPessoa.pnlPessoas.ControlCount - 1 do
+      begin
+        if pnlPessoas.Controls[I] is TDBEdit then
+          begin
+            (pnlPessoas.Controls[I] as TDBEdit).Enabled := Enable;
+          end;
+      end;
+
+     lkCmbProf.Enabled := Enable;
+     lkCmbEstado.Enabled := Enable;
+end;
+
+
+procedure TFrmPessoa.FormShow(Sender: TObject);
+begin
+  dm.conexao.Connected := True;
+  dm.cdsPessoa.Open;
+  dm.cdsProfissao.Open;
+  dm.cdsEstado.Open;
+
+  edtPesquisar.SetFocus;
+  Edicao(False);
+  BtnPadrao;
+end;
+
+
+procedure TFrmPessoa.ParametrosClick(Sender: TObject);
+begin
+  FrmConfiguracao := TFrmConfiguracao.Create(Self);
+  FrmConfiguracao.ShowModal;
+end;
+
+
+procedure TFrmPessoa.ProfClick(Sender: TObject);
+begin
+  FrmProfissao := TFrmProfissao.Create(Self);
+  FrmProfissao.ShowModal;
+end;
+
+procedure TFrmPessoa.Relatrios1Click(Sender: TObject);
+begin
+  FrmRelatorios := TFrmRelatorios.Create(Self);
+  FrmRelatorios.ShowModal;
+end;
+
+end.
+

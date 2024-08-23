@@ -1,0 +1,87 @@
+unit uFrmLogin;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.jpeg,
+  Vcl.Imaging.pngimage, Vcl.StdCtrls, Vcl.Buttons, uFrmMenuVendas;
+
+type
+  TFrmLogin = class(TForm)
+    pnlFundo: TPanel;
+    imgFundo: TImage;
+    pnlLogin: TPanel;
+    imgLogin: TImage;
+    edtUsuario: TEdit;
+    edtSenha: TEdit;
+    bttLogin: TSpeedButton;
+    procedure FormShow(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure bttLoginClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure CentralizarPainel;
+    procedure Login;
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmLogin: TFrmLogin;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrmLogin.bttLoginClick(Sender: TObject);
+begin
+  if (edtUsuario.Text = '') or (edtSenha.Text = '') then
+    begin
+      raise Exception.Create('Os campos usuário ou senha está vazio! Favor preencha corretamente!');
+    end
+  else
+    begin
+
+      if edtUsuario.Text <> 'admin' then
+        begin
+          edtUsuario.SetFocus;
+          raise Exception.Create('O campo usuário está incorreto!');
+        end;
+
+        if edtSenha.Text <> '123' then
+        begin
+          edtUsuario.SetFocus;
+          raise Exception.Create('A senha está incorreta!');
+        end;
+    end;
+
+  Login;
+
+end;
+
+procedure TFrmLogin.CentralizarPainel;
+begin
+  pnlLogin.Top := (self.Height div 2) - (pnlLogin.Height div 2);
+  pnlLogin.Left := (self.width div 2) - (pnlLogin.Width div 2);
+end;
+
+procedure TFrmLogin.FormResize(Sender: TObject);
+begin
+  CentralizarPainel;
+end;
+
+procedure TFrmLogin.FormShow(Sender: TObject);
+begin
+  CentralizarPainel;
+  edtUsuario.SetFocus;
+end;
+
+procedure TFrmLogin.Login;
+begin
+  Application.CreateForm(TFrmMenuVendas, FrmMenuVendas);
+  FrmMenuVendas.Show;
+
+end;
+
+end.

@@ -1,0 +1,341 @@
+unit uFrmProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Mask,
+  Vcl.DBCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Menus;
+
+type
+  TFrmProdutos = class(TForm)
+    pnlFundoProdutos: TPanel;
+    dbDescricao: TDBEdit;
+    dbCodigo: TDBEdit;
+    dbValor: TDBEdit;
+    lbDescricao: TLabel;
+    lbCodigo: TLabel;
+    lbValor: TLabel;
+    lbCategoria: TLabel;
+    dbDtCadastro: TDBEdit;
+    DBGrid1: TDBGrid;
+    lbDataCadastro: TLabel;
+    edtPesquisar: TEdit;
+    btnPesquisar: TButton;
+    btnNovo: TButton;
+    btnSalvar: TButton;
+    btnEditar: TButton;
+    btnCancelar: TButton;
+    Label6: TLabel;
+    btnUltimo: TButton;
+    btnProximo: TButton;
+    btnPrimeiro: TButton;
+    lbStatus: TLabel;
+    MainMenu1: TMainMenu;
+    Categoria1: TMenuItem;
+    Sairt1: TMenuItem;
+    cbCategoria: TDBLookupComboBox;
+    cbStatus: TComboBox;
+    procedure FormShow(Sender: TObject);
+    procedure Categoria1Click(Sender: TObject);
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure btnEditarClick(Sender: TObject);
+    procedure btnProximoClick(Sender: TObject);
+    procedure btnPrimeiroClick(Sender: TObject);
+    procedure btnUltimoClick(Sender: TObject);
+    procedure btnPesquisarClick(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure cbStatusChange(Sender: TObject);
+    procedure edtPesquisarKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+    procedure BtnPadrao;
+    procedure Edicao(Enable: Boolean);
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmProdutos: TFrmProdutos;
+
+implementation
+
+{$R *.dfm}
+
+uses DmConexao, uFrmCategoria;
+
+procedure TFrmProdutos.btnCancelarClick(Sender: TObject);
+begin
+  if (dm.cdsProduto.State in [dsInsert, dsEdit]) then
+    begin
+      if MessageDlg('Tem certeza que deseja cancelar a operação?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+        begin
+          dm.cdsProduto.Cancel;
+          Edicao(False);
+          BtnPadrao;
+          edtPesquisar.SetFocus;
+          DBGrid1.DataSource.DataSet.First;
+        end;
+    end;
+end;
+
+procedure TFrmProdutos.btnEditarClick(Sender: TObject);
+begin
+  dm.cdsProduto.Edit;
+  Edicao(True);
+  btnEditar.Enabled := False;
+  btnNovo.Enabled := False;
+  btnSalvar.Enabled := True;
+  btnCancelar.Enabled := True
+end;
+
+procedure TFrmProdutos.btnNovoClick(Sender: TObject);
+begin
+  if dm.cdsProduto.Active then
+    dm.cdsProduto.Open;
+
+  dm.cdsProduto.Append;
+
+  Edicao(True);
+
+  dbDescricao.SetFocus;
+  btnCancelar.Enabled := True;
+  btnNovo.Enabled := False;
+  btnEditar.Enabled := False;
+  btnSalvar.Enabled := true;
+
+end;
+
+procedure TFrmProdutos.BtnPadrao;
+begin
+  btnNovo.Enabled := True;
+  btnEditar.Enabled := True;
+  btnCancelar.Enabled := False;
+  btnSalvar.Enabled := False;
+end;
+
+procedure TFrmProdutos.btnPesquisarClick(Sender: TObject);
+var
+  ValorID: Integer;
+begin
+  // Verifica se o valor digitado pode ser convertido para um número inteiro
+  if TryStrToInt(edtPesquisar.Text, ValorID) then
+  begin
+    // Tenta localizar pelo campo ID (integer)
+    if dm.cdsProduto.Locate('ID', ValorID, []) then
+      ShowMessage('Produto localizado pelo ID!!!')
+    else
+      ShowMessage('Produto não localizado pelo ID!!!');
+  end
+  else
+  begin
+    // Tenta localizar pelo campo DESCRICAO (varchar)
+    if dm.cdsProduto.Locate('DESCRICAO', edtPesquisar.Text, []) then
+      ShowMessage('Produto localizado pela descrição!!!')
+    else
+      ShowMessage('Produto não localizado pela descrição!!!');
+  end;
+  // Retorna o foco para o campo de pesquisa
+  edtPesquisar.SetFocus;
+end;
+
+procedure TFrmProdutos.btnPrimeiroClick(Sender: TObject);
+begin
+  DBGrid1.DataSource.DataSet.First;
+  BtnPadrao;
+end;
+
+procedure TFrmProdutos.btnProximoClick(Sender: TObject);
+begin
+  DBGrid1.DataSource.DataSet.Next;
+  BtnPadrao;
+end;
+
+procedure TFrmProdutos.btnSalvarClick(Sender: TObject);
+begin
+
+  if dm.cdsProduto.State in [dsInsert] then
+    begin
+      dm.cdsProduto.Post;
+      ShowMessage('Produto inserido com sucesso!');
+    end
+  else
+    raise Exception.Create('Erro ao gravar produto');
+
+  if dm.cdsProduto.State in [dsEdit] then
+    begin
+      dm.cdsProduto.Post;
+      ShowMessage('Produto atualizado com sucesso!');
+    end
+  else
+    raise Exception.Create('Erro ao gravar produto');
+
+    dm.cdsProdutoSTATUS.AsInteger := cbStatus.ItemIndex;
+    BtnPadrao;
+    Edicao(False);
+    edtPesquisar.SetFocus;
+end;
+
+procedure TFrmProdutos.btnUltimoClick(Sender: TObject);
+begin
+  DBGrid1.DataSource.DataSet.Last;
+  BtnPadrao;
+end;
+
+procedure TFrmProdutos.Categoria1Click(Sender: TObject);
+begin
+  FrmCategoria := TFrmCategoria.Create(Self);
+  FrmCategoria.ShowModal;
+end;
+
+procedure TFrmProdutos.cbStatusChange(Sender: TObject);
+begin
+  dm.cdsProdutoSTATUS.AsInteger := cbStatus.ItemIndex;
+end;
+
+procedure TFrmProdutos.DBGrid1CellClick(Column: TColumn);
+begin
+  BtnPadrao;
+end;
+
+procedure TFrmProdutos.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+ if dm.cdsProdutoSTATUS.Value = 1 then
+  begin
+    DBGrid1.Canvas.Font.Color := clRed; // Cor da fonte para melhor contraste
+//    DBGrid1.Canvas.Font.Style := [fsBold];
+  end
+  else
+  begin
+    // Caso contrário, mantém as cores padrão
+    DBGrid1.Canvas.Brush.Color := clWindow;
+    DBGrid1.Canvas.Font.Color := clWindowText;
+  end;
+  // Preenche a célula com as cores selecionadas
+  DBGrid1.Canvas.FillRect(Rect);
+  // Desenha o texto da célula
+  DBGrid1.Canvas.TextRect(Rect, Rect.Left + 2, Rect.Top + 2, Column.Field.AsString);
+end;
+
+procedure TFrmProdutos.Edicao;
+Var
+I : Integer;
+begin
+    for I := 0 to FrmProdutos.pnlFundoProdutos.ControlCount - 1 do
+      begin
+        if pnlFundoProdutos.Controls[I] is TDBEdit then
+          begin
+            (pnlFundoProdutos.Controls[I] as TDBEdit).Enabled := Enable;
+          end;
+      end;
+
+     cbCategoria.Enabled := Enable;
+     cbStatus.Enabled := Enable;
+end;
+
+procedure TFrmProdutos.edtPesquisarKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  ValorID: Integer;
+begin
+  if Key = VK_RETURN then
+    begin
+      // Verifica se o valor digitado pode ser convertido para um número inteiro
+      if TryStrToInt(edtPesquisar.Text, ValorID) then
+      begin
+        // Tenta localizar pelo campo ID (integer)
+        if dm.cdsProduto.Locate('ID', ValorID, []) then
+          edtPesquisar.Text := ''
+        else
+          ShowMessage('Produto não localizado pelo ID!!!');
+      end
+      else
+      begin
+        // Tenta localizar pelo campo DESCRICAO (varchar)
+        if dm.cdsProduto.Locate('DESCRICAO', edtPesquisar.Text, []) then
+          ShowMessage('Produto localizado pela descrição!!!')
+        else
+          ShowMessage('Produto não localizado pela descrição!!!');
+      end;
+  // Retorna o foco para o campo de pesquisa
+  edtPesquisar.SetFocus;
+end;
+end;
+
+procedure TFrmProdutos.FormCreate(Sender: TObject);
+begin
+  Self.KeyPreview := True;
+end;
+
+procedure TFrmProdutos.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case Key of
+    VK_F1:
+       if not Trim(dm.cdsProdutoDESCRICAO.AsString).IsEmpty then
+        begin
+            if dm.cdsProduto.Active then
+              dm.cdsProduto.Open;
+
+            dm.cdsProduto.Append;
+
+            Edicao(True);
+            dbDescricao.SetFocus;
+            btnCancelar.Enabled := True;
+            btnNovo.Enabled := False;
+            btnEditar.Enabled := False;
+            btnSalvar.Enabled := true;
+        end
+        else
+          raise Exception.Create('Erro ao inserir produto!');
+    VK_F2:
+    begin
+    if dm.cdsProduto.State in [dsInsert] then
+      begin
+       dm.cdsProduto.Post;
+       ShowMessage('Produto inserido com sucesso!');
+      end
+    else
+      raise Exception.Create('Erro ao gravar produto');
+
+    if dm.cdsProduto.State in [dsEdit] then
+      begin
+        dm.cdsProduto.Post;
+        ShowMessage('Produto atualizado com sucesso!');
+      end
+    else
+      raise Exception.Create('Erro ao gravar produto');
+
+      dm.cdsProdutoSTATUS.AsInteger := cbStatus.ItemIndex;
+      BtnPadrao;
+      Edicao(False);
+      edtPesquisar.SetFocus;
+        end;
+    end;
+end;
+
+procedure TFrmProdutos.FormShow(Sender: TObject);
+Var
+I: Integer;
+begin
+  dm.conexao.Connected := true;
+  dm.cdsCategoria.Open;
+  dm.cdsProduto.Open;
+
+  edtPesquisar.SetFocus;
+  BtnPadrao;
+  Edicao(False);
+  FrmProdutos.DBGrid1.DataSource.DataSet.First;
+//  TFloatField(dm.cdsProduto.FieldByName('VALOR')).DisplayFormat := '#,##0.00';
+
+end;
+
+end.

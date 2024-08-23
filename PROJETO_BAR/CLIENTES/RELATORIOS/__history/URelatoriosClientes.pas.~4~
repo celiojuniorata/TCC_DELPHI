@@ -1,0 +1,27 @@
+unit URelatoriosClientes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, frxSmartMemo, frCoreClasses, frxClass,
+  frxDBSet;
+
+type
+  TFrmRelatorioClientes = class(TForm)
+    frListagemDeClientes: TfrxReport;
+    frxDBDataset1: TfrxDBDataset;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmRelatorioClientes: TFrmRelatorioClientes;
+
+implementation
+
+{$R *.dfm}
+
+end.

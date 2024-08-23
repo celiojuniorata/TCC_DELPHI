@@ -1,0 +1,20 @@
+program ProjetoTask;
+
+uses
+  Vcl.Forms,
+  UfrmPessoa in 'UfrmPessoa.pas' {FrmPessoa},
+  DmConexao in 'DM\DmConexao.pas' {dm: TDataModule},
+  UProfissao in 'Cadastros\UProfissao.pas' {FrmProfissao},
+  UConfiguracao in 'CONFIGURACAO\UConfiguracao.pas' {FrmConfiguracao};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFrmPessoa, FrmPessoa);
+  Application.CreateForm(Tdm, dm);
+  Application.CreateForm(TFrmProfissao, FrmProfissao);
+  Application.CreateForm(TFrmConfiguracao, FrmConfiguracao);
+  Application.Run;
+end.

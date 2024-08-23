@@ -1,0 +1,61 @@
+unit URelatoriosClientes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, frxSmartMemo, frCoreClasses, frxClass,
+  frxDBSet, DmConexao, Data.FMTBcd, Data.DB, Data.SqlExpr;
+
+type
+  TFrmRelatorioClientes = class(TForm)
+    frListagemDeClientes: TfrxReport;
+    frxDsRelCliente: TfrxDBDataset;
+    SQLqueryClientes: TSQLQuery;
+    SQLqueryClientesID: TIntegerField;
+    SQLqueryClientesNOME: TStringField;
+    SQLqueryClientesDATANASCIMENTO: TDateField;
+    SQLqueryClientesRUA: TStringField;
+    SQLqueryClientesTELEFONE: TStringField;
+    SQLqueryClientesEMAIL: TStringField;
+    SQLqueryClientesCPF: TStringField;
+    SQLqueryClientesCEP: TStringField;
+    SQLqueryClientesBAIRRO: TStringField;
+    SQLqueryClientesCOMPLEMENTO: TStringField;
+    SQLqueryClientesIBGE: TStringField;
+    SQLqueryClientesCIDADE: TStringField;
+    SQLqueryClientesID_PROF: TIntegerField;
+    SQLqueryClientesNUMERO: TIntegerField;
+    SQLqueryClientesID_UF: TIntegerField;
+    SQLqueryClientesEnd: TSQLQuery;
+    IntegerField1: TIntegerField;
+    StringField1: TStringField;
+    DateField1: TDateField;
+    StringField2: TStringField;
+    StringField3: TStringField;
+    StringField4: TStringField;
+    StringField5: TStringField;
+    StringField6: TStringField;
+    StringField7: TStringField;
+    StringField8: TStringField;
+    StringField9: TStringField;
+    StringField10: TStringField;
+    IntegerField2: TIntegerField;
+    IntegerField3: TIntegerField;
+    IntegerField4: TIntegerField;
+    frmListagemClienteEndereco: TfrxReport;
+    frxDsRelCliOrdenado: TfrxDBDataset;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmRelatorioClientes: TFrmRelatorioClientes;
+
+implementation
+
+{$R *.dfm}
+
+end.

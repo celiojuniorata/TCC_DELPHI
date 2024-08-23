@@ -1,0 +1,37 @@
+unit uFrmCategoria;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
+  Vcl.ExtCtrls, Vcl.DBCtrls;
+
+type
+  TFrmCategoria = class(TForm)
+    pnlFundoCategorias: TPanel;
+    DBNavigator1: TDBNavigator;
+    DBGrid1: TDBGrid;
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCategoria: TFrmCategoria;
+
+implementation
+
+{$R *.dfm}
+
+uses DmConexao;
+
+procedure TFrmCategoria.FormShow(Sender: TObject);
+begin
+  dm.cdsProfissao.Open;
+  dm.conexao.Connected := true;
+end;
+
+end.

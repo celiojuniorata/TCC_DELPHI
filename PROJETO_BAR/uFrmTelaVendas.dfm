@@ -1,0 +1,471 @@
+object FrmTelaVendas: TFrmTelaVendas
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Tela de Vendas'
+  ClientHeight = 631
+  ClientWidth = 856
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  OnShow = FormShow
+  TextHeight = 15
+  object pnlVendas: TPanel
+    Left = 0
+    Top = 0
+    Width = 856
+    Height = 631
+    Align = alClient
+    TabOrder = 0
+    ExplicitWidth = 852
+    ExplicitHeight = 630
+    object Panel1: TPanel
+      Left = 1
+      Top = 1
+      Width = 400
+      Height = 629
+      Align = alLeft
+      TabOrder = 0
+      ExplicitHeight = 628
+      object Panel3: TPanel
+        Left = 1
+        Top = 1
+        Width = 398
+        Height = 171
+        Align = alTop
+        TabOrder = 0
+        object lbID: TLabel
+          Left = 8
+          Top = 6
+          Width = 93
+          Height = 28
+          Caption = 'Comanda:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -20
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object lbMesa: TLabel
+          Left = 8
+          Top = 54
+          Width = 44
+          Height = 21
+          Caption = 'Mesa:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object lbCliente: TLabel
+          Left = 8
+          Top = 87
+          Width = 58
+          Height = 21
+          Caption = 'Cliente:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object lbFuncionario: TLabel
+          Left = 8
+          Top = 117
+          Width = 95
+          Height = 21
+          Caption = 'Funcion'#225'rio:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object lbDataHora: TLabel
+          Left = 8
+          Top = 144
+          Width = 40
+          Height = 21
+          Caption = 'Data:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object lbStatus: TLabel
+          Left = 245
+          Top = 6
+          Width = 64
+          Height = 28
+          Caption = 'Status:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -20
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object lbNomeStatus: TLabel
+          Left = 315
+          Top = 15
+          Width = 87
+          Height = 17
+          Caption = 'lbNomeStatus'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object dbCodigo: TDBEdit
+          Left = 107
+          Top = 12
+          Width = 40
+          Height = 23
+          DataField = 'ID'
+          DataSource = dm.DSourceVendas
+          ReadOnly = True
+          TabOrder = 0
+        end
+        object dbMesa: TDBEdit
+          Left = 58
+          Top = 56
+          Width = 31
+          Height = 23
+          DataField = 'MESA'
+          DataSource = dm.DSourceVendas
+          ReadOnly = True
+          TabOrder = 1
+        end
+        object dbCliente: TDBEdit
+          Left = 72
+          Top = 85
+          Width = 183
+          Height = 23
+          DataField = 'NOME_PESSOALK'
+          DataSource = dm.DSourceVendas
+          ReadOnly = True
+          TabOrder = 2
+        end
+        object dbFuncionario: TDBEdit
+          Left = 109
+          Top = 117
+          Width = 146
+          Height = 23
+          DataField = 'NOME_USUARIOLK'
+          DataSource = dm.DSourceVendas
+          ReadOnly = True
+          TabOrder = 3
+        end
+        object dbTempo: TDBEdit
+          Left = 54
+          Top = 146
+          Width = 115
+          Height = 23
+          DataField = 'DATA_HORA'
+          DataSource = dm.DSourceVendas
+          ReadOnly = True
+          TabOrder = 4
+        end
+        object DBEdit3: TDBEdit
+          Left = 315
+          Top = 40
+          Width = 78
+          Height = 23
+          DataField = 'STATUS'
+          DataSource = dm.DSourceVendas
+          ReadOnly = True
+          TabOrder = 5
+          Visible = False
+        end
+      end
+      object DBGrid1: TDBGrid
+        Left = 1
+        Top = 221
+        Width = 398
+        Height = 275
+        Align = alClient
+        TabOrder = 1
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -12
+        TitleFont.Name = 'Segoe UI'
+        TitleFont.Style = []
+      end
+      object Panel4: TPanel
+        Left = 1
+        Top = 496
+        Width = 398
+        Height = 132
+        Align = alBottom
+        TabOrder = 2
+        ExplicitTop = 495
+        object Label6: TLabel
+          Left = 1
+          Top = 41
+          Width = 396
+          Height = 17
+          Align = alBottom
+          Alignment = taCenter
+          Caption = 'TOTAL'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 40
+        end
+        object Label7: TLabel
+          Left = 1
+          Top = 1
+          Width = 396
+          Height = 17
+          Align = alBottom
+          Alignment = taCenter
+          Caption = 'DESCONTOS'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 77
+        end
+        object btnCancelar: TButton
+          Left = 1
+          Top = 106
+          Width = 396
+          Height = 25
+          Align = alBottom
+          Caption = 'CANCELAR - F2'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -15
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+        object btnFinalizar: TButton
+          Left = 1
+          Top = 81
+          Width = 396
+          Height = 25
+          Align = alBottom
+          Caption = 'FINALIZAR - F1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -15
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 1
+          OnClick = btnFinalizarClick
+        end
+        object DBEdit1: TDBEdit
+          Left = 1
+          Top = 18
+          Width = 396
+          Height = 23
+          Align = alBottom
+          TabOrder = 2
+        end
+        object dbTotal: TDBEdit
+          Left = 1
+          Top = 58
+          Width = 396
+          Height = 23
+          Align = alBottom
+          DataField = 'VALOR_TOTAL'
+          DataSource = dm.DSourceVendas
+          TabOrder = 3
+        end
+      end
+      object Panel5: TPanel
+        Left = 1
+        Top = 172
+        Width = 398
+        Height = 49
+        Align = alTop
+        TabOrder = 3
+        object Label10: TLabel
+          Left = 107
+          Top = 20
+          Width = 137
+          Height = 21
+          Caption = 'Itens da Comanda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+      end
+    end
+    object Panel2: TPanel
+      Left = 401
+      Top = 1
+      Width = 454
+      Height = 629
+      Align = alClient
+      TabOrder = 1
+      ExplicitWidth = 450
+      ExplicitHeight = 628
+      object Panel6: TPanel
+        Left = 1
+        Top = 1
+        Width = 452
+        Height = 45
+        Align = alTop
+        Caption = 'Panel6'
+        TabOrder = 0
+        ExplicitWidth = 448
+        object Edit1: TEdit
+          Left = 1
+          Top = 1
+          Width = 330
+          Height = 43
+          Align = alClient
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -19
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          TextHint = 'Busque o produto por Nome ou por C'#243'digo...'
+          ExplicitWidth = 326
+          ExplicitHeight = 33
+        end
+        object Button1: TButton
+          Left = 391
+          Top = 1
+          Width = 60
+          Height = 43
+          Align = alRight
+          Caption = 'INCLUIR'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 1
+          ExplicitLeft = 387
+        end
+        object Button2: TButton
+          Left = 331
+          Top = 1
+          Width = 60
+          Height = 43
+          Align = alRight
+          Caption = 'BUSCAR'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 2
+          ExplicitLeft = 327
+        end
+      end
+      object PageControl1: TPageControl
+        Left = 1
+        Top = 46
+        Width = 452
+        Height = 582
+        ActivePage = tabMarmita
+        Align = alClient
+        TabOrder = 1
+        ExplicitWidth = 448
+        ExplicitHeight = 581
+        object tabMarmita: TTabSheet
+          Caption = 'PRODUTOS'
+          object DBGrid2: TDBGrid
+            Left = 0
+            Top = 0
+            Width = 444
+            Height = 552
+            Align = alClient
+            BorderStyle = bsNone
+            DataSource = dm.DSourceProduto
+            GradientEndColor = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -12
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleHotTrack]
+            ParentFont = False
+            ReadOnly = True
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -12
+            TitleFont.Name = 'Segoe UI'
+            TitleFont.Style = []
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ID'
+                Visible = True
+              end
+              item
+                Alignment = taLeftJustify
+                Expanded = False
+                FieldName = 'DESCRICAO'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'VALOR'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ID_CATEGORIA'
+                Visible = False
+              end
+              item
+                Expanded = False
+                FieldName = 'DT_CADASTRO'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'STATUS'
+                Visible = True
+              end>
+          end
+        end
+      end
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 516
+    Top = 264
+    object Configurao2: TMenuItem
+      Caption = 'Libera'#231#227'o'
+    end
+    object Sair1: TMenuItem
+      Caption = 'Sair'
+    end
+  end
+end

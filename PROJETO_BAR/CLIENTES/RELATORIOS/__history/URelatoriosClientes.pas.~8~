@@ -1,0 +1,43 @@
+unit URelatoriosClientes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, frxSmartMemo, frCoreClasses, frxClass,
+  frxDBSet, DmConexao, Data.FMTBcd, Data.DB, Data.SqlExpr;
+
+type
+  TFrmRelatorioClientes = class(TForm)
+    frListagemDeClientes: TfrxReport;
+    frxDBDataset1: TfrxDBDataset;
+    SQLqueryClientes: TSQLQuery;
+    SQLqueryClientesID: TIntegerField;
+    SQLqueryClientesNOME: TStringField;
+    SQLqueryClientesDATANASCIMENTO: TDateField;
+    SQLqueryClientesRUA: TStringField;
+    SQLqueryClientesTELEFONE: TStringField;
+    SQLqueryClientesEMAIL: TStringField;
+    SQLqueryClientesCPF: TStringField;
+    SQLqueryClientesCEP: TStringField;
+    SQLqueryClientesBAIRRO: TStringField;
+    SQLqueryClientesCOMPLEMENTO: TStringField;
+    SQLqueryClientesIBGE: TStringField;
+    SQLqueryClientesCIDADE: TStringField;
+    SQLqueryClientesID_PROF: TIntegerField;
+    SQLqueryClientesNUMERO: TIntegerField;
+    SQLqueryClientesID_UF: TIntegerField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmRelatorioClientes: TFrmRelatorioClientes;
+
+implementation
+
+{$R *.dfm}
+
+end.

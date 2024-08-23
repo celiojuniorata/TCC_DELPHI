@@ -1,0 +1,391 @@
+object FrmFuncionario: TFrmFuncionario
+  Left = 0
+  Top = 0
+  Caption = 'Cadastro de Funcion'#225'rios'
+  ClientHeight = 685
+  ClientWidth = 500
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Menu = MainMenu1
+  OnShow = FormShow
+  TextHeight = 15
+  object pnlFuncionarios: TPanel
+    Left = 0
+    Top = 0
+    Width = 500
+    Height = 685
+    Align = alClient
+    TabOrder = 0
+    ExplicitWidth = 496
+    ExplicitHeight = 684
+    object Label5: TLabel
+      Left = 17
+      Top = 23
+      Width = 36
+      Height = 15
+      Caption = 'Nome:'
+    end
+    object Label8: TLabel
+      Left = 17
+      Top = 83
+      Width = 24
+      Height = 15
+      Caption = 'CPF:'
+    end
+    object Label1: TLabel
+      Left = 171
+      Top = 83
+      Width = 94
+      Height = 15
+      Caption = 'Data Nascimento:'
+    end
+    object Label3: TLabel
+      Left = 312
+      Top = 83
+      Width = 47
+      Height = 15
+      Caption = 'Telefone:'
+    end
+    object Label6: TLabel
+      Left = 400
+      Top = 23
+      Width = 14
+      Height = 15
+      Caption = 'ID:'
+    end
+    object Label2: TLabel
+      Left = 17
+      Top = 143
+      Width = 37
+      Height = 15
+      Caption = 'E-mail:'
+    end
+    object Label13: TLabel
+      Left = 312
+      Top = 143
+      Width = 51
+      Height = 15
+      Caption = 'Profiss'#227'o:'
+    end
+    object Label9: TLabel
+      Left = 17
+      Top = 203
+      Width = 24
+      Height = 15
+      Caption = 'CEP:'
+    end
+    object Label10: TLabel
+      Left = 224
+      Top = 203
+      Width = 34
+      Height = 15
+      Caption = 'Bairro:'
+    end
+    object Label4: TLabel
+      Left = 17
+      Top = 265
+      Width = 23
+      Height = 15
+      Caption = 'Rua:'
+    end
+    object Label15: TLabel
+      Left = 282
+      Top = 265
+      Width = 44
+      Height = 15
+      Caption = 'N'#250'mero'
+    end
+    object lbEstado: TLabel
+      Left = 408
+      Top = 265
+      Width = 38
+      Height = 15
+      Caption = 'Estado:'
+    end
+    object Label11: TLabel
+      Left = 17
+      Top = 331
+      Width = 80
+      Height = 15
+      Caption = 'Complemento:'
+    end
+    object Label14: TLabel
+      Left = 206
+      Top = 331
+      Width = 40
+      Height = 15
+      Caption = 'Cidade:'
+    end
+    object Label12: TLabel
+      Left = 361
+      Top = 331
+      Width = 27
+      Height = 15
+      Caption = 'IBGE:'
+    end
+    object Label7: TLabel
+      Left = 17
+      Top = 419
+      Width = 38
+      Height = 15
+      Caption = 'Buscar:'
+    end
+    object dbNome: TDBEdit
+      Left = 17
+      Top = 44
+      Width = 264
+      Height = 23
+      DataField = 'NOME'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 0
+    end
+    object dbCPF: TDBEdit
+      Left = 17
+      Top = 104
+      Width = 121
+      Height = 23
+      DataField = 'CPF'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 1
+    end
+    object dbDataNasc: TDBEdit
+      Left = 171
+      Top = 104
+      Width = 92
+      Height = 23
+      DataField = 'DATANASCIMENTO'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 2
+    end
+    object dbTelefone: TDBEdit
+      Left = 312
+      Top = 104
+      Width = 137
+      Height = 23
+      DataField = 'TELEFONE'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 3
+    end
+    object dbID: TDBEdit
+      Left = 400
+      Top = 44
+      Width = 49
+      Height = 23
+      DataField = 'ID'
+      DataSource = dm.DSourceFuncionario
+      ReadOnly = True
+      TabOrder = 4
+    end
+    object dbEmail: TDBEdit
+      Left = 17
+      Top = 164
+      Width = 264
+      Height = 23
+      DataField = 'EMAIL'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 5
+    end
+    object lkCmbProf: TDBLookupComboBox
+      Left = 305
+      Top = 164
+      Width = 145
+      Height = 23
+      DataSource = dm.DSourceFuncionario
+      KeyField = 'ID'
+      ListField = 'NOME'
+      ListSource = dm.DSourceProfissao
+      TabOrder = 6
+    end
+    object dbCEP: TDBEdit
+      Left = 17
+      Top = 224
+      Width = 121
+      Height = 23
+      DataField = 'CEP'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 7
+    end
+    object dbBairro: TDBEdit
+      Left = 224
+      Top = 224
+      Width = 225
+      Height = 23
+      DataField = 'BAIRRO'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 8
+    end
+    object dbLogradouro: TDBEdit
+      Left = 17
+      Top = 286
+      Width = 241
+      Height = 23
+      DataField = 'RUA'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 9
+    end
+    object dbNumero: TDBEdit
+      Left = 282
+      Top = 286
+      Width = 81
+      Height = 23
+      DataField = 'NUMERO'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 10
+    end
+    object lkCmbEstado: TDBLookupComboBox
+      Left = 408
+      Top = 286
+      Width = 42
+      Height = 23
+      DataField = 'ID_UF'
+      DataSource = dm.DSourceFuncionario
+      KeyField = 'ID'
+      ListField = 'UF'
+      ListSource = dm.DSourceEstado
+      TabOrder = 11
+    end
+    object dbComplemento: TDBEdit
+      Left = 17
+      Top = 352
+      Width = 178
+      Height = 23
+      DataField = 'COMPLEMENTO'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 12
+    end
+    object dbCidade: TDBEdit
+      Left = 206
+      Top = 352
+      Width = 131
+      Height = 23
+      DataField = 'CIDADE'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 13
+    end
+    object dbIBGE: TDBEdit
+      Left = 361
+      Top = 352
+      Width = 88
+      Height = 23
+      DataField = 'IBGE'
+      DataSource = dm.DSourceFuncionario
+      TabOrder = 14
+    end
+    object edtPesquisar: TEdit
+      Left = 61
+      Top = 416
+      Width = 121
+      Height = 23
+      TabOrder = 15
+    end
+    object btnPesquisar: TButton
+      Left = 188
+      Top = 415
+      Width = 75
+      Height = 25
+      Caption = 'Pesquisar'
+      TabOrder = 16
+    end
+    object btnProximo: TButton
+      Left = 278
+      Top = 415
+      Width = 59
+      Height = 25
+      Caption = '>'
+      TabOrder = 17
+    end
+    object btnPrimeiro: TButton
+      Left = 343
+      Top = 415
+      Width = 59
+      Height = 25
+      Caption = '>|'
+      TabOrder = 18
+    end
+    object btnUltimo: TButton
+      Left = 408
+      Top = 415
+      Width = 59
+      Height = 25
+      Caption = '>>'
+      TabOrder = 19
+    end
+    object DBGrid1: TDBGrid
+      Left = 17
+      Top = 445
+      Width = 450
+      Height = 177
+      DataSource = dm.DSourceFuncionario
+      ReadOnly = True
+      TabOrder = 20
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -12
+      TitleFont.Name = 'Segoe UI'
+      TitleFont.Style = []
+    end
+    object btnNovo: TButton
+      Left = 17
+      Top = 639
+      Width = 75
+      Height = 25
+      Caption = 'Novo'
+      TabOrder = 21
+      OnClick = btnNovoClick
+    end
+    object btnSalvar: TButton
+      Left = 107
+      Top = 639
+      Width = 75
+      Height = 25
+      Caption = 'Salvar'
+      Enabled = False
+      TabOrder = 22
+      OnClick = btnSalvarClick
+    end
+    object btnEditar: TButton
+      Left = 206
+      Top = 639
+      Width = 75
+      Height = 25
+      Caption = 'Editar'
+      Enabled = False
+      TabOrder = 23
+    end
+    object btnDeletar: TButton
+      Left = 300
+      Top = 639
+      Width = 75
+      Height = 25
+      Caption = 'Deletar'
+      Enabled = False
+      TabOrder = 24
+    end
+    object btnCancelar: TButton
+      Left = 392
+      Top = 639
+      Width = 75
+      Height = 25
+      Caption = 'Cancelar'
+      Enabled = False
+      TabOrder = 25
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 320
+    Top = 24
+    object Configurrao1: TMenuItem
+      Caption = 'Configura'#231#227'o'
+    end
+    object Cadastros1: TMenuItem
+      Caption = 'Cadastros'
+    end
+    object Cadastros2: TMenuItem
+      Caption = 'Relat'#243'rios'
+    end
+  end
+end
