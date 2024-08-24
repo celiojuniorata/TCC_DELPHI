@@ -73,6 +73,7 @@ type
     procedure pnlProdutoClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
     procedure pnlTelaFechamentoCaixaClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     PanelSelecionado: TPanel; // Variável para armazenar o painel selecionado
@@ -110,11 +111,16 @@ begin
       ValorMesa := lbMesa.Caption;
       Status := lbStatusMesaCode.Caption;
 
+      // Cria e abre a tela de vendas
       FrmTelaVendas := TFrmTelaVendas.Create(Self);
+
+      // Abre o ClientDataSet se não estiver aberto
+      if not dm.cdsVendas.Active then
+        dm.cdsVendas.Open;
+
       FrmTelaVendas.ShowModal;
 
       lbStatusMesaCode.Visible := True;
-
     end
     else
     begin
@@ -122,6 +128,8 @@ begin
     end;
   end;
 end;
+
+
 
 procedure TFrmMenuVendas.CaixaAberto;
 begin
@@ -174,6 +182,11 @@ begin
   lbData.Caption := DateToStr(Date);
   AssociarEventosCaixa; // Chamar o método para associar os eventos de clique
 
+end;
+
+procedure TFrmMenuVendas.FormShow(Sender: TObject);
+begin
+  dm.cdsVendas.Open;
 end;
 
 procedure TFrmMenuVendas.GridPanel1Click(Sender: TObject);
