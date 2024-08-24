@@ -21,10 +21,8 @@ type
     lbCliente: TLabel;
     lbFuncionario: TLabel;
     lbDataHora: TLabel;
-    DBGrid1: TDBGrid;
+    DBGridItensVenda: TDBGrid;
     Panel4: TPanel;
-    btnCancelar: TButton;
-    btnFinalizar: TButton;
     Panel5: TPanel;
     Label10: TLabel;
     Panel6: TPanel;
@@ -34,21 +32,33 @@ type
     dbFuncionario: TDBEdit;
     dbTempo: TDBEdit;
     Edit1: TEdit;
-    DBEdit1: TDBEdit;
-    dbTotal: TDBEdit;
-    Label6: TLabel;
-    Label7: TLabel;
     lbStatus: TLabel;
     DBEdit3: TDBEdit;
     lbNomeStatus: TLabel;
     PageControl1: TPageControl;
     tabMarmita: TTabSheet;
     DBGrid2: TDBGrid;
-    Button1: TButton;
-    Button2: TButton;
+    btnIncluir: TButton;
+    btnBuscar: TButton;
+    Panel7: TPanel;
+    dbTotal: TDBEdit;
+    DBEdit1: TDBEdit;
+    lbDesconto: TLabel;
+    lbTotal: TLabel;
+    btnCancelar: TButton;
+    btnFinalizar: TButton;
+    btnDeletarItem: TButton;
+    pnlTelaPesquisa: TPanel;
+    imgPesquisa: TImage;
+    Panel8: TPanel;
+    Image1: TImage;
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnFinalizarClick(Sender: TObject);
+    procedure btnIncluirClick(Sender: TObject);
+    procedure btnPesquisaClick(Sender: TObject);
+    procedure imgPesquisaClick(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -63,12 +73,15 @@ implementation
 
 {$R *.dfm}
 
-uses DmConexao, uFrmMenuVendas;
+uses DmConexao, uFrmMenuVendas, UfrmTelaPesquisaUsuario, UfrmPessoa;
 
 procedure TFrmTelaVendas.btnFinalizarClick(Sender: TObject);
 begin
   if dm.cdsVendas.State in [dsInsert, dsEdit] then
     try
+      if dm.cdsItensVenda.ChangeCount > 0 then
+          dm.cdsItensVenda.ApplyUpdates(0);
+
       dm.cdsVendas.Post;
     except
       on E: Exception do
@@ -76,6 +89,50 @@ begin
         raise Exception.Create('Erro ao salvar a Venda: ' + E.Message);
       end;
     end;
+
+  ShowMessage('Venda criada com sucesso!');
+  FrmTelaVendas.Close;
+end;
+
+procedure TFrmTelaVendas.btnIncluirClick(Sender: TObject);
+var
+  NovoID, MaxID: Integer;
+begin
+  MaxID := 0;
+
+  // Encontrar o maior ID existente
+  dm.cdsItensVenda.First;
+  while not dm.cdsItensVenda.Eof do
+  begin
+    if dm.cdsItensVendaID.Value > MaxID then
+      MaxID := dm.cdsItensVendaID.Value;
+    dm.cdsItensVenda.Next;
+  end;
+
+  NovoID := MaxID + 1;
+
+  dm.cdsItensVenda.Append;
+
+  dm.cdsItensVendaID.Value := NovoID;
+  dm.cdsItensVendaCOD_PRODUTO.Value := dm.cdsProdutoID.Value;
+
+  dm.cdsItensVendaCOD_VENDA.Value := dm.cdsVendasID.Value;
+  dm.cdsItensVendaDESCRICAO.Value := dm.cdsProdutoDESCRICAO.Value;
+  dm.cdsItensVendaVALOR.Value := dm.cdsProdutoVALOR.Value;
+  dm.cdsItensVendaSTATUS.Value := dm.cdsProdutoSTATUS.Value;
+  dm.cdsItensVendaQTD.Value := 1;
+  dm.cdsItensVenda.Post;
+
+  // Apenas atualizar o DBGrid sem aplicar ao banco
+  DBGridItensVenda.Refresh;
+end;
+
+
+
+
+procedure TFrmTelaVendas.btnPesquisaClick(Sender: TObject);
+begin
+  FrmTelaPesquisaCliente.ShowModal;
 end;
 
 procedure TFrmTelaVendas.FormCreate(Sender: TObject);
@@ -87,18 +144,42 @@ end;
 
 procedure TFrmTelaVendas.FormShow(Sender: TObject);
 begin
-
   dm.conexao.Connected := True;
+
   dm.cdsVendas.Open;
   dm.cdsPessoa.Open;
   dm.cdsUsuario.Open;
   dm.cdsProduto.Open;
+  dm.cdsItensVenda.Open;
 
-  if not (dm.cdsVendas.State in [dsInsert]) then
-    begin
-      dm.cdsVendas.Append;
-    end;
+  if dm.cdsVendas.IsEmpty then
+  begin
+    dm.cdsVendas.Append;
+  end
+  else
+  begin
+    if not (dm.cdsVendas.State in [dsInsert, dsEdit]) then
+      dm.cdsVendas.Edit;
 
+    dm.cdsItensVenda.Filter := 'COD_VENDA = ' + dm.cdsVendasID.AsString;
+    dm.cdsItensVenda.Filtered := True;
+
+    if dm.cdsItensVenda.IsEmpty then
+      dm.cdsItensVenda.EmptyDataSet;
+  end;
+end;
+
+
+
+
+procedure TFrmTelaVendas.Image1Click(Sender: TObject);
+begin
+  FrmPessoa.ShowModal;
+end;
+
+procedure TFrmTelaVendas.imgPesquisaClick(Sender: TObject);
+begin
+  FrmTelaPesquisaCliente.ShowModal;
 end;
 
 end.

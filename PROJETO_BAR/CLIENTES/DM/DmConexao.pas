@@ -79,6 +79,17 @@ type
     SQueryTemp2: TSQLQuery;
     cdsVendasNOME_PESSOALK: TStringField;
     cdsVendasNOME_USUARIOLK: TStringField;
+    dspItens_Vendas: TDataSetProvider;
+    DSourceItens_Venda: TDataSource;
+    cdsItensVenda: TClientDataSet;
+    SQueryItens_venda: TSQLQuery;
+    cdsItensVendaID: TIntegerField;
+    cdsItensVendaCOD_PRODUTO: TIntegerField;
+    cdsItensVendaCOD_VENDA: TIntegerField;
+    cdsItensVendaDESCRICAO: TStringField;
+    cdsItensVendaVALOR: TFMTBCDField;
+    cdsItensVendaSTATUS: TIntegerField;
+    cdsItensVendaQTD: TIntegerField;
     procedure cdsPessoaAfterPost(DataSet: TDataSet);
     procedure cdsPessoaNewRecord(DataSet: TDataSet);
     procedure cdsPessoaAfterDelete(DataSet: TDataSet);
@@ -572,35 +583,24 @@ begin
 end;
 
 procedure Tdm.cdsVendasNewRecord(DataSet: TDataSet);
-var
-Mesa, StatusMesa: String;
-Status: Integer;
 begin
-
   dm.SQueryTemp.Close;
   dm.SQueryTemp.SQL.Clear;
   dm.SQueryTemp.SQL.Add('SELECT GEN_ID(gen_vendas_id, 1) as ID FROM RDB$DATABASE');
   dm.SQueryTemp.Open;
 
   if not dm.SQueryTemp.FieldByName('ID').IsNull then
-    dm.cdsVendasID.AsInteger := dm.SQueryTemp.FieldByName('ID').AsInteger; //ID
+    dm.cdsVendasID.AsInteger := dm.SQueryTemp.FieldByName('ID').AsInteger; // Atribui o novo ID
 
-
-  dm.cdsPessoa.First;
-  dm.cdsUsuario.First;
-
-  Status := uFrmMenuVendas.Bandeira;
-  dm.cdsVendasSTATUS.AsInteger := Status;
-  Mesa := uFrmMenuVendas.ValorMesa; // Atribui a mesa selecionada na variável Caixa;
-  dm.cdsVendasMESA.AsString := Mesa;
-
+  dm.cdsVendasSTATUS.AsInteger := uFrmMenuVendas.Bandeira;
+  dm.cdsVendasMESA.AsString := uFrmMenuVendas.ValorMesa;
   dm.cdsVendasCOD_CLIENTE.AsInteger := dm.cdsPessoaID.AsInteger;
-
   dm.cdsVendasCOD_FUNCIONARIO.AsInteger := dm.cdsUsuarioID.AsInteger;
-
-  dm.cdsVendasDATA_HORA.AsDateTime := Date;
-  dm.cdsVendasVALOR_TOTAL.AsInteger := 0;
+  dm.cdsVendasDATA_HORA.AsDateTime := Now;
+  dm.cdsVendasVALOR_TOTAL.AsFloat := 0.00;
 end;
+
+
 
 procedure Tdm.DSourcePessoaStateChange(Sender: TObject);
 begin

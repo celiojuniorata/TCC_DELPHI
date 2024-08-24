@@ -149,6 +149,10 @@
             <Form>FrmCategoria</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UfrmTelaPesquisaUsuario.pas">
+            <Form>FrmTelaPesquisaCliente</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

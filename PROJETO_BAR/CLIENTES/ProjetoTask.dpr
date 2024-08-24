@@ -13,15 +13,17 @@ uses
   uFrmTelaVendas in '..\uFrmTelaVendas.pas' {FrmTelaVendas},
   uFrmUsuario in '..\uFrmUsuario.pas' {FrmUsuario},
   uFrmProdutos in '..\uFrmProdutos.pas' {FrmProdutos},
-  uFrmCategoria in '..\uFrmCategoria.pas' {FrmCategoria};
+  uFrmCategoria in '..\uFrmCategoria.pas' {FrmCategoria},
+  UfrmTelaPesquisaUsuario in 'UfrmTelaPesquisaUsuario.pas' {FrmTelaPesquisaCliente};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TFrmMenuVendas, FrmMenuVendas);
   Application.CreateForm(TFrmTelaVendas, FrmTelaVendas);
+  Application.CreateForm(TFrmTelaPesquisaCliente, FrmTelaPesquisaCliente);
+  Application.CreateForm(TFrmMenuVendas, FrmMenuVendas);
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(TFrmProdutos, FrmProdutos);
   Application.CreateForm(TFrmUsuario, FrmUsuario);
