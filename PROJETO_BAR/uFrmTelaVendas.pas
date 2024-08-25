@@ -31,7 +31,7 @@ type
     dbCliente: TDBEdit;
     dbFuncionario: TDBEdit;
     dbTempo: TDBEdit;
-    Edit1: TEdit;
+    edtPesquisarProduto: TEdit;
     lbStatus: TLabel;
     DBEdit3: TDBEdit;
     lbNomeStatus: TLabel;
@@ -59,6 +59,9 @@ type
     procedure btnPesquisaClick(Sender: TObject);
     procedure imgPesquisaClick(Sender: TObject);
     procedure Image1Click(Sender: TObject);
+    procedure btnBuscarClick(Sender: TObject);
+    procedure btnDeletarItemClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -75,47 +78,130 @@ implementation
 
 uses DmConexao, uFrmMenuVendas, UfrmTelaPesquisaUsuario, UfrmPessoa;
 
-procedure TFrmTelaVendas.btnFinalizarClick(Sender: TObject);
+procedure TFrmTelaVendas.btnBuscarClick(Sender: TObject);
 begin
-  if dm.cdsVendas.State in [dsInsert, dsEdit] then
-    try
-      if dm.cdsItensVenda.ChangeCount > 0 then
-          dm.cdsItensVenda.ApplyUpdates(0);
-
-      dm.cdsVendas.Post;
-    except
-      on E: Exception do
-      begin
-        raise Exception.Create('Erro ao salvar a Venda: ' + E.Message);
-      end;
-    end;
-
-  ShowMessage('Venda criada com sucesso!');
-  FrmTelaVendas.Close;
+  if dm.cdsProduto.Locate('DESCRICAO', edtPesquisarProduto.text, []) then
+    ShowMessage('Pessoa Localizado!')
+  else
+      ShowMessage('Pessoa não localizado!');
+      edtPesquisarProduto.SetFocus;
 end;
 
-procedure TFrmTelaVendas.btnIncluirClick(Sender: TObject);
-var
-  NovoID, MaxID: Integer;
+procedure TFrmTelaVendas.btnCancelarClick(Sender: TObject);
 begin
-  MaxID := 0;
-
-  // Encontrar o maior ID existente
-  dm.cdsItensVenda.First;
-  while not dm.cdsItensVenda.Eof do
+  // Confirmar com o usuário se ele deseja realmente cancelar a operação
+  if MessageDlg('Deseja realmente cancelar a operação? Todas as alterações não salvas serão descartadas.', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    if dm.cdsItensVendaID.Value > MaxID then
-      MaxID := dm.cdsItensVendaID.Value;
-    dm.cdsItensVenda.Next;
+    // Verificar se o ClientDataSet de vendas está ativo e, se necessário, cancelar alterações
+    if dm.cdsVendas.State in [dsInsert, dsEdit] then
+    begin
+      // Cancelar alterações no ClientDataSet de vendas
+      dm.cdsVendas.Cancel;
+    end;
+
+    // Verificar se o ClientDataSet de itens de venda está ativo e, se necessário, cancelar alterações
+    if dm.cdsItensVenda.State in [dsInsert, dsEdit] then
+    begin
+      // Cancelar alterações no ClientDataSet de itens de venda
+      dm.cdsItensVenda.Cancel;
+    end;
+
+    // Fechar a tela
+    Close;
   end;
+end;
 
-  NovoID := MaxID + 1;
 
-  dm.cdsItensVenda.Append;
+procedure TFrmTelaVendas.btnDeletarItemClick(Sender: TObject);
+begin
+  // Verificar se há um registro selecionado na DBGrid
+  if not dm.cdsItensVenda.IsEmpty then
+  begin
+    // Confirmar a exclusão com o usuário
+    if MessageDlg('Deseja realmente excluir o item selecionado?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      // Excluir o registro selecionado
+      dm.cdsItensVenda.Delete;
 
-  dm.cdsItensVendaID.Value := NovoID;
+      // Aplicar as alterações se necessário
+      dm.cdsItensVenda.ApplyUpdates(0);
+
+      // Atualizar o filtro se necessário
+      // O filtro deve estar configurado para mostrar apenas os itens da venda atual
+      dm.cdsItensVenda.Filter := 'COD_VENDA = ' + dm.cdsVendasID.AsString;
+      dm.cdsItensVenda.Filtered := True;
+    end;
+  end
+  else
+  begin
+    // Informar ao usuário que não há registros para excluir
+    ShowMessage('Nenhum item selecionado para exclusão.');
+  end;
+end;
+
+
+
+procedure TFrmTelaVendas.btnFinalizarClick(Sender: TObject);
+begin
+
+  if MessageDlg('Deseja realmente finalizar a venda?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    // Verifica se cdsVendas está em modo de inserção para disparar o código do ID no NewRecord
+    if not (dm.cdsVendas.State in [dsInsert, dsEdit]) then
+      dm.cdsVendas.Append;
+
+    // Verifica se o ID foi gerado corretamente
+    if dm.cdsVendasID.IsNull then
+      raise Exception.Create('Erro: ID da venda não gerado.');
+
+    // Garante que o cdsItensVenda está em modo de edição
+    if not (dm.cdsItensVenda.State in [dsInsert, dsEdit]) then
+      dm.cdsItensVenda.Edit;
+
+    // Verifica se há itens de venda
+    if not dm.cdsItensVenda.IsEmpty then
+    begin
+      try
+        // Salva os itens de venda primeiro
+        dm.cdsItensVenda.Post;
+        dm.cdsItensVenda.ApplyUpdates(0);
+
+        // Salva o registro de venda
+        dm.cdsVendas.Post;
+        dm.cdsVendas.ApplyUpdates(0);
+
+        ShowMessage('Venda criada com sucesso!');
+        FrmTelaVendas.Close;
+      except
+        on E: Exception do
+        begin
+          // Reverte alterações em caso de erro
+          dm.cdsItensVenda.CancelUpdates;
+          dm.cdsVendas.CancelUpdates;
+
+          ShowMessage('Erro ao salvar a Venda: ' + E.Message);
+        end;
+      end;
+    end
+    else
+      ShowMessage('Nenhum item de venda para salvar.');
+  end
+  else
+  begin
+    // Mensagem informando que a operação foi cancelada
+    ShowMessage('Finalização da venda cancelada.');
+  end;
+end;
+
+
+
+procedure TFrmTelaVendas.btnIncluirClick(Sender: TObject);
+begin
+
+  if not (dm.cdsItensVenda.State in [dsInsert, dsEdit]) then
+    dm.cdsItensVenda.Append;
+
   dm.cdsItensVendaCOD_PRODUTO.Value := dm.cdsProdutoID.Value;
-
   dm.cdsItensVendaCOD_VENDA.Value := dm.cdsVendasID.Value;
   dm.cdsItensVendaDESCRICAO.Value := dm.cdsProdutoDESCRICAO.Value;
   dm.cdsItensVendaVALOR.Value := dm.cdsProdutoVALOR.Value;
@@ -126,8 +212,6 @@ begin
   // Apenas atualizar o DBGrid sem aplicar ao banco
   DBGridItensVenda.Refresh;
 end;
-
-
 
 
 procedure TFrmTelaVendas.btnPesquisaClick(Sender: TObject);
@@ -144,31 +228,24 @@ end;
 
 procedure TFrmTelaVendas.FormShow(Sender: TObject);
 begin
-  dm.conexao.Connected := True;
-
   dm.cdsVendas.Open;
   dm.cdsPessoa.Open;
   dm.cdsUsuario.Open;
   dm.cdsProduto.Open;
-  dm.cdsItensVenda.Open;
 
-  if dm.cdsVendas.IsEmpty then
+  // Se necessário, defina o filtro na abertura da tela
+  if not dm.cdsVendas.IsEmpty then
   begin
-    dm.cdsVendas.Append;
-  end
-  else
-  begin
-    if not (dm.cdsVendas.State in [dsInsert, dsEdit]) then
-      dm.cdsVendas.Edit;
-
     dm.cdsItensVenda.Filter := 'COD_VENDA = ' + dm.cdsVendasID.AsString;
     dm.cdsItensVenda.Filtered := True;
-
-    if dm.cdsItensVenda.IsEmpty then
-      dm.cdsItensVenda.EmptyDataSet;
+    dm.cdsItensVenda.Open;
   end;
-end;
 
+  if not (dm.cdsVendas.State in [dsInsert, dsEdit]) then
+    dm.cdsVendas.Append;
+
+  dm.cdsItensVenda.EmptyDataSet;
+end;
 
 
 

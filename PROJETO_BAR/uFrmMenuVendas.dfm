@@ -566,6 +566,7 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 1
+          ExplicitWidth = 165
         end
         object pnlCaixa3: TPanel
           Left = 334
@@ -584,6 +585,8 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 2
+          ExplicitLeft = 332
+          ExplicitWidth = 182
         end
         object pnlCaixa4: TPanel
           Left = 517
@@ -602,6 +605,7 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 3
+          ExplicitLeft = 514
         end
         object pnlCaixa5: TPanel
           Left = 712
@@ -620,6 +624,8 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 4
+          ExplicitLeft = 709
+          ExplicitWidth = 196
         end
         object pnlCaixa6: TPanel
           Left = 1
@@ -656,6 +662,7 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 6
+          ExplicitWidth = 165
         end
         object pnlCaixa8: TPanel
           Left = 334
@@ -674,6 +681,8 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 7
+          ExplicitLeft = 332
+          ExplicitWidth = 182
         end
         object pnlCaixa9: TPanel
           Left = 517
@@ -692,6 +701,7 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 8
+          ExplicitLeft = 514
         end
         object pnlCaixa10: TPanel
           Left = 712
@@ -710,6 +720,8 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 9
+          ExplicitLeft = 709
+          ExplicitWidth = 196
         end
         object pnlCaixa11: TPanel
           Left = 1
@@ -746,6 +758,7 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 11
+          ExplicitWidth = 165
         end
         object pnlCaixa13: TPanel
           Left = 334
@@ -764,6 +777,8 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 12
+          ExplicitLeft = 332
+          ExplicitWidth = 182
         end
         object pnlCaixa14: TPanel
           Left = 517
@@ -782,6 +797,7 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 13
+          ExplicitLeft = 514
         end
         object pnlCaixa15: TPanel
           Left = 712
@@ -800,6 +816,8 @@ object FrmMenuVendas: TFrmMenuVendas
           ParentBackground = False
           ParentFont = False
           TabOrder = 14
+          ExplicitLeft = 709
+          ExplicitWidth = 196
         end
       end
     end

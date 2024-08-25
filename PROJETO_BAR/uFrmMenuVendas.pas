@@ -111,12 +111,16 @@ begin
       ValorMesa := lbMesa.Caption;
       Status := lbStatusMesaCode.Caption;
 
-      // Cria e abre a tela de vendas
       FrmTelaVendas := TFrmTelaVendas.Create(Self);
 
-      // Abre o ClientDataSet se não estiver aberto
       if not dm.cdsVendas.Active then
         dm.cdsVendas.Open;
+
+      if not dm.cdsItensVenda.Active then
+        dm.cdsItensVenda.Open;
+
+      // Adicione o registro para a nova venda
+      dm.cdsVendas.Append;
 
       FrmTelaVendas.ShowModal;
 
@@ -126,8 +130,11 @@ begin
     begin
       ShowMessage('Ação cancelada.');
     end;
-  end;
+  end
+  else
+    ShowMessage('Nenhuma mesa selecionada. Por favor, selecione uma mesa antes de abrir o caixa.');
 end;
+
 
 
 
@@ -155,25 +162,32 @@ procedure TFrmMenuVendas.ClicaMesa(Sender: TObject);
 var
   Panel: TPanel;
 begin
-if (lbStatusCaixa.Caption = 'ABERTO') and (StrToIntDef(lbNumeroCaixa.Caption, 0) > 0) then
+  if (lbStatusCaixa.Caption = 'ABERTO') and (StrToIntDef(lbNumeroCaixa.Caption, 0) > 0) then
   begin
     if Sender is TPanel then
+    begin
+      Panel := TPanel(Sender);
+
+      // Resetar a cor do painel anteriormente selecionado
+      if Assigned(PanelSelecionado) and (PanelSelecionado <> Panel) then
       begin
-        Panel := TPanel(Sender);
-        if Assigned(PanelSelecionado) and (PanelSelecionado <> Panel) then
-        begin
-          Bandeira := 1;
-          PanelSelecionado.Color := clGreen;
-        end;
-        Panel.Color := clBlue;
-        PanelSelecionado := Panel;
-        lbMesa.Caption := Panel.Caption;
-        lbMesa.Visible := True;
+        PanelSelecionado.Color := clGreen;
       end;
+
+      // Configurar o novo painel selecionado
+      Panel.Color := clBlue;
+      PanelSelecionado := Panel;
+      lbMesa.Caption := Panel.Caption;
+      lbMesa.Visible := True;
+
+      // Configurar a bandeira
+      Bandeira := 1;
+    end;
   end
   else
     raise Exception.Create('Para selecionar uma mesa, você precisa primeiro abrir o caixa!');
 end;
+
 
 
 procedure TFrmMenuVendas.FormCreate(Sender: TObject);
@@ -268,14 +282,14 @@ end;
 procedure TFrmMenuVendas.pnlTelaVendasClick(Sender: TObject);
 begin
   if Bandeira = 1 then
-    begin
-      FrmTelaVendas := TFrmTelaVendas.Create(Self);
-      FrmTelaVendas.ShowModal;
-    end
+  begin
+    FrmTelaVendas := TFrmTelaVendas.Create(Self);
+    FrmTelaVendas.ShowModal;
+  end
   else
-    ShowMessage('Para abrir a venda, necessário que mesa esteja aberta!')
-
+    ShowMessage('Para abrir a venda, é necessário que uma mesa esteja selecionada!');
 end;
+
 
 procedure TFrmMenuVendas.Sair1Click(Sender: TObject);
 begin

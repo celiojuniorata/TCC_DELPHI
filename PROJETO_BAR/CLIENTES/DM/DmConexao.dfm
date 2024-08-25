@@ -128,8 +128,8 @@ object dm: Tdm
       'VendorLibWin64=ibclient64.dll'
       'VendorLibOsx=libgds.dylib'
       
-        'Database=C:\Users\Pichau\Documents\Embarcadero\Studio\Projects\P' +
-        'ROJETO_BAR\DBOPT\CRUD.FDB'
+        'Database=C:\Users\conta\OneDrive\Documentos\Embarcadero\Studio\P' +
+        'rojects\PROJETO_BAR\DBOPT\CRUD.FDB'
       'User_Name=sysdba'
       'Password=masterkey'
       'Role=RoleName'
@@ -147,7 +147,6 @@ object dm: Tdm
       'ErrorResourceFile='
       'Interbase TransIsolation=ReadCommited'
       'Trim Char=False')
-    Connected = True
     Left = 1016
     Top = 24
   end
@@ -514,6 +513,9 @@ object dm: Tdm
     Aggregates = <>
     Params = <>
     ProviderName = 'dspItens_Vendas'
+    BeforePost = cdsItensVendaBeforePost
+    AfterPost = cdsItensVendaAfterPost
+    OnNewRecord = cdsItensVendaNewRecord
     Left = 648
     Top = 176
     object cdsItensVendaID: TIntegerField

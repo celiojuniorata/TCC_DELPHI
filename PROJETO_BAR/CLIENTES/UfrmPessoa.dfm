@@ -27,6 +27,8 @@ object FrmPessoa: TFrmPessoa
     ParentBackground = False
     ShowCaption = False
     TabOrder = 0
+    ExplicitWidth = 588
+    ExplicitHeight = 679
     object Label1: TLabel
       Left = 171
       Top = 83

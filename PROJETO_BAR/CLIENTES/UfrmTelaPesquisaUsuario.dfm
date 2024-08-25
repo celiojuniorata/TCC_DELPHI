@@ -54,6 +54,7 @@ object FrmTelaPesquisaCliente: TFrmTelaPesquisaCliente
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
+      OnClick = btnPesquisarClick
     end
     object btnOk: TButton
       Left = 340
@@ -68,6 +69,7 @@ object FrmTelaPesquisaCliente: TFrmTelaPesquisaCliente
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 2
+      OnClick = btnOkClick
     end
   end
   object pnlFundoGrid: TPanel

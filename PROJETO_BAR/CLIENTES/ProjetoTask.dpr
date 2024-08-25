@@ -21,9 +21,9 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFrmMenuVendas, FrmMenuVendas);
   Application.CreateForm(TFrmTelaVendas, FrmTelaVendas);
   Application.CreateForm(TFrmTelaPesquisaCliente, FrmTelaPesquisaCliente);
-  Application.CreateForm(TFrmMenuVendas, FrmMenuVendas);
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(TFrmProdutos, FrmProdutos);
   Application.CreateForm(TFrmUsuario, FrmUsuario);

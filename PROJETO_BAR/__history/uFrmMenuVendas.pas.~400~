@@ -1,0 +1,314 @@
+unit uFrmMenuVendas;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Menus, Vcl.StdCtrls,
+  UfrmPessoa, Vcl.Imaging.pngimage, Vcl.DBCGrids, Vcl.Buttons, uFrmTelaVendas;
+
+type
+  TFrmMenuVendas = class(TForm)
+    pnlMenu: TPanel;
+    pnlLog: TPanel;
+    pnlPrincipalVendas: TPanel;
+    Timer1: TTimer;
+    pnlPesquisaCaixa: TPanel;
+    pnlGridCaixa: TPanel;
+    GridPanel1: TGridPanel;
+    pnlCaixa1: TPanel;
+    pnlCaixa2: TPanel;
+    pnlCaixa3: TPanel;
+    pnlCaixa4: TPanel;
+    pnlCaixa5: TPanel;
+    pnlCaixa6: TPanel;
+    pnlCaixa7: TPanel;
+    pnlCaixa8: TPanel;
+    pnlCaixa9: TPanel;
+    pnlCaixa10: TPanel;
+    pnlCaixa11: TPanel;
+    pnlCaixa12: TPanel;
+    pnlCaixa13: TPanel;
+    pnlCaixa14: TPanel;
+    pnlCaixa15: TPanel;
+    pnlPesquisa: TPanel;
+    Edit1: TEdit;
+    Label3: TLabel;
+    bntAbrirCaixa: TButton;
+    btnVisualizarCaixa: TButton;
+    btnEditarCaixa: TButton;
+    btnFecharCaixa: TButton;
+    lbMesa: TLabel;
+    Label1: TLabel;
+    lbHora: TLabel;
+    lbData: TLabel;
+    pnlTelaClientes: TPanel;
+    pnlTelaUsuarios: TPanel;
+    pnlTelaVendas: TPanel;
+    pnlTelaRecebimentos: TPanel;
+    pnlProduto: TPanel;
+    lbUsuarioLogado: TLabel;
+    Label2: TLabel;
+    Label4: TLabel;
+    pnlTelaFechamentoCaixa: TPanel;
+    pnlTelaRelatorios: TPanel;
+    pnlTelaConfiguracao: TPanel;
+    Label5: TLabel;
+    lbStatusCaixa: TLabel;
+    Label7: TLabel;
+    Panel1: TPanel;
+    lbStatusMesa: TLabel;
+    lbStatusMesaCode: TLabel;
+    lbCaixa: TLabel;
+    lbNumeroCaixa: TLabel;
+    procedure Sair1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure ClicaMesa(Sender: TObject);
+    procedure GridPanel1Click(Sender: TObject);
+    procedure bntAbrirCaixaClick(Sender: TObject);
+    procedure pnlTelaClientesClick(Sender: TObject);
+    procedure pnlTelaUsuariosClick(Sender: TObject);
+    procedure pnlTelaVendasClick(Sender: TObject);
+    procedure pnlProdutoClick(Sender: TObject);
+    procedure Panel1Click(Sender: TObject);
+    procedure pnlTelaFechamentoCaixaClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+    PanelSelecionado: TPanel; // Variável para armazenar o painel selecionado
+    procedure AssociarEventosCaixa;
+    procedure CaixaAberto;
+    procedure CaixaFechado;
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmMenuVendas: TFrmMenuVendas;
+  Bandeira: Integer;
+  Status: String;
+  ValorMesa: String;
+
+implementation
+
+{$R *.dfm}
+
+uses uFrmUsuario, uFrmProdutos, DmConexao;
+
+procedure TFrmMenuVendas.bntAbrirCaixaClick(Sender: TObject);
+var
+  Resposta: Integer;
+begin
+  if Bandeira = 1 then
+  begin
+    Resposta := MessageDlg('Deseja realmente abrir o caixa?', mtConfirmation, [mbYes, mbNo], 0);
+    if Resposta = mrYes then
+    begin
+      lbStatusMesaCode.Visible := False;
+      lbStatusMesaCode.Caption := 'ABERTO';
+
+      ValorMesa := lbMesa.Caption;
+      Status := lbStatusMesaCode.Caption;
+
+      FrmTelaVendas := TFrmTelaVendas.Create(Self);
+
+      if not dm.cdsVendas.Active then
+        dm.cdsVendas.Open;
+
+      if not dm.cdsItensVenda.Active then
+        dm.cdsItensVenda.Open;
+
+      // A chamada ao Append para gerar o novo registro é feita aqui
+      dm.cdsVendas.Append;
+
+      FrmTelaVendas.ShowModal;
+
+      lbStatusMesaCode.Visible := True;
+    end
+    else
+    begin
+      ShowMessage('Ação cancelada.');
+    end;
+  end;
+end;
+
+end;
+
+
+
+
+procedure TFrmMenuVendas.CaixaAberto;
+begin
+  if lbStatusCaixa.Caption = 'ABERTO' then
+    begin
+      lbStatusCaixa.Font.Color := clGreen;
+      lbNumeroCaixa.Font.Color := clGreen;
+      lbNumeroCaixa.Visible := True;
+      lbCaixa.Visible := True;
+    end;
+
+end;
+
+procedure TFrmMenuVendas.CaixaFechado;
+begin
+  lbStatusCaixa.Font.Color := clRed;
+  lbNumeroCaixa.Font.Color := clRed;
+  lbNumeroCaixa.Visible := False;
+  lbCaixa.Visible := False;
+end;
+
+procedure TFrmMenuVendas.ClicaMesa(Sender: TObject);
+var
+  Panel: TPanel;
+begin
+if (lbStatusCaixa.Caption = 'ABERTO') and (StrToIntDef(lbNumeroCaixa.Caption, 0) > 0) then
+  begin
+    if Sender is TPanel then
+      begin
+        Panel := TPanel(Sender);
+        if Assigned(PanelSelecionado) and (PanelSelecionado <> Panel) then
+        begin
+          Bandeira := 1;
+          PanelSelecionado.Color := clGreen;
+        end;
+        Panel.Color := clBlue;
+        PanelSelecionado := Panel;
+        lbMesa.Caption := Panel.Caption;
+        lbMesa.Visible := True;
+      end;
+  end
+  else
+    raise Exception.Create('Para selecionar uma mesa, você precisa primeiro abrir o caixa!');
+end;
+
+
+procedure TFrmMenuVendas.FormCreate(Sender: TObject);
+begin
+  lbHora.Caption := TimeToStr(Time);
+  lbData.Caption := DateToStr(Date);
+  AssociarEventosCaixa; // Chamar o método para associar os eventos de clique
+
+end;
+
+procedure TFrmMenuVendas.FormShow(Sender: TObject);
+begin
+  dm.cdsVendas.Open;
+end;
+
+procedure TFrmMenuVendas.GridPanel1Click(Sender: TObject);
+begin
+  if Bandeira = 1 then
+    begin
+      PanelSelecionado.Color := clGreen;
+      Bandeira := 0;
+      lbMesa.Caption := '0';
+    end;
+end;
+
+procedure TFrmMenuVendas.Panel1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TFrmMenuVendas.pnlProdutoClick(Sender: TObject);
+begin
+  FrmProdutos := TFrmProdutos.Create(Self);
+  FrmProdutos.ShowModal;
+end;
+
+procedure TFrmMenuVendas.pnlTelaClientesClick(Sender: TObject);
+begin
+  FrmPessoa := TFrmPessoa.Create(Self);
+  FrmPessoa.ShowModal;
+end;
+
+procedure TFrmMenuVendas.pnlTelaFechamentoCaixaClick(Sender: TObject);
+var
+  Resposta: Integer;
+  Caixa: Integer;
+  CaixaStr: string;
+  ValorSangriaStr: String;
+begin
+  if lbStatusCaixa.Caption = 'FECHADO' then
+  begin
+    Resposta := MessageDlg('Deseja realmente abrir o caixa?', mtConfirmation, [mbYes, mbNo], 0);
+    if Resposta = mrYes then
+    begin
+      CaixaStr := InputBox('Informe o Código do caixa', 'Código Caixa:', '');
+
+      // Try Conversão
+      if TryStrToInt(CaixaStr, Caixa) then
+      begin
+        ValorSangriaStr := InputBox('Informe o valor da Sangria','Informe o valor:', '');
+        lbStatusCaixa.Font.Color := clGreen;
+        lbStatusCaixa.Caption := 'ABERTO';
+
+        lbNumeroCaixa.Caption := CaixaStr;
+
+        CaixaAberto;
+      end
+      else
+      begin
+        CaixaFechado;
+        ShowMessage('Por favor, insira um valor inteiro válido.');
+        exit;
+      end;
+    end
+    else
+      begin
+       CaixaFechado;
+       ShowMessage('Operação cancelada!');
+       Exit;
+      end;
+
+  end;
+end;
+
+
+procedure TFrmMenuVendas.pnlTelaUsuariosClick(Sender: TObject);
+begin
+  FrmUsuario := TFrmUsuario.Create(Self);
+  FrmUsuario.ShowModal;
+end;
+
+procedure TFrmMenuVendas.pnlTelaVendasClick(Sender: TObject);
+begin
+  if Bandeira = 1 then
+    begin
+      FrmTelaVendas := TFrmTelaVendas.Create(Self);
+      FrmTelaVendas.ShowModal;
+    end
+  else
+    ShowMessage('Para abrir a venda, necessário que mesa esteja aberta!')
+
+end;
+
+procedure TFrmMenuVendas.Sair1Click(Sender: TObject);
+begin
+  FrmMenuVendas.Close;
+end;
+
+procedure TFrmMenuVendas.Timer1Timer(Sender: TObject);
+begin
+  lbHora.Caption := TimeToStr(Time);
+  lbData.Caption := DateToStr(Date);
+end;
+
+procedure TFrmMenuVendas.AssociarEventosCaixa;
+var
+  I: Integer;
+  Panel: TPanel;
+begin
+  for I := 1 to 15 do
+  begin
+    Panel := FindComponent('pnlCaixa' + IntToStr(I)) as TPanel;
+    if Assigned(Panel) then
+    begin
+     Panel.OnClick := ClicaMesa;
+    end;
+    end;
+  end;
+
+end.
+

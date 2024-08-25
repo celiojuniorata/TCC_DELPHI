@@ -246,6 +246,7 @@ begin
   edtPesquisar.SetFocus;
   Edicao(False);
   BtnPadrao;
+  dm.cdsPessoa.First;
 end;
 
 

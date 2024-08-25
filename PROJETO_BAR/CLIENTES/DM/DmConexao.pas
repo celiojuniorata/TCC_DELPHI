@@ -125,6 +125,9 @@ type
     procedure cdsVendasNewRecord(DataSet: TDataSet);
     procedure cdsVendasBeforePost(DataSet: TDataSet);
     procedure cdsVendasAfterPost(DataSet: TDataSet);
+    procedure cdsItensVendaBeforePost(DataSet: TDataSet);
+    procedure cdsItensVendaAfterPost(DataSet: TDataSet);
+    procedure cdsItensVendaNewRecord(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -203,9 +206,53 @@ begin
 
 end;
 
+procedure Tdm.cdsItensVendaAfterPost(DataSet: TDataSet);
+begin
+  try
+    cdsItensVenda.ApplyUpdates(0);
+  except
+    on E: Exception do
+      raise Exception.Create('Erro ao aplicar atualizações em ItensVenda: ' + E.Message);
+  end;
+end;
+
+
+procedure Tdm.cdsItensVendaBeforePost(DataSet: TDataSet);
+begin
+  // Verifique se o ID é nulo e, se necessário, gere um novo ID
+  if cdsItensVendaID.IsNull then
+  begin
+    SQueryTemp2.Close;
+    SQueryTemp2.SQL.Clear;
+    SQueryTemp2.SQL.Add('SELECT GEN_ID(gen_itens_venda_id, 1) as ID FROM RDB$DATABASE');
+    SQueryTemp2.Open;
+    cdsItensVendaID.AsInteger := SQueryTemp2.FieldByName('ID').AsInteger;
+  end;
+end;
+
+
+
+procedure Tdm.cdsItensVendaNewRecord(DataSet: TDataSet);
+begin
+  // Abrir a consulta para obter o próximo ID do gerador
+  SQueryTemp.Close;
+  SQueryTemp.SQL.Clear;
+  SQueryTemp.SQL.Add('SELECT GEN_ID(GEN_ITENS_VENDA_ID, 1) AS ID FROM RDB$DATABASE');
+  SQueryTemp.Open;
+
+  // Atribuir o próximo ID ao campo ID do ClientDataSet
+  if not SQueryTemp.FieldByName('ID').IsNull then
+    cdsItensVendaID.AsInteger := SQueryTemp.FieldByName('ID').AsInteger;
+
+  // Garantir que o valor total está correto
+  cdsItensVendaVALOR.AsFloat := 0.00;
+end;
+
+
+
 procedure Tdm.cdsPessoaAfterCancel(DataSet: TDataSet);
 begin
-  cdsPessoa.First;
+//  cdsPessoa.First;
 end;
 
 
@@ -574,12 +621,20 @@ end;
 
 procedure Tdm.cdsVendasAfterPost(DataSet: TDataSet);
 begin
-  dm.cdsVendas.ApplyUpdates(0);
+  try
+    dm.cdsVendas.ApplyUpdates(0);
+    dm.cdsVendas.First;
+  except
+    on E: Exception do
+    begin
+      raise Exception.Create('Erro ao salvar vendas: ' + E.Message);
+    end;
+  end;
 end;
 
 procedure Tdm.cdsVendasBeforePost(DataSet: TDataSet);
 begin
-  dm.cdsVendas.ApplyUpdates(0);
+//  dm.cdsVendas.ApplyUpdates(0);
 end;
 
 procedure Tdm.cdsVendasNewRecord(DataSet: TDataSet);
@@ -590,8 +645,11 @@ begin
   dm.SQueryTemp.Open;
 
   if not dm.SQueryTemp.FieldByName('ID').IsNull then
+  begin
     dm.cdsVendasID.AsInteger := dm.SQueryTemp.FieldByName('ID').AsInteger; // Atribui o novo ID
+  end;
 
+  // Atribuir valores adicionais
   dm.cdsVendasSTATUS.AsInteger := uFrmMenuVendas.Bandeira;
   dm.cdsVendasMESA.AsString := uFrmMenuVendas.ValorMesa;
   dm.cdsVendasCOD_CLIENTE.AsInteger := dm.cdsPessoaID.AsInteger;
@@ -599,6 +657,8 @@ begin
   dm.cdsVendasDATA_HORA.AsDateTime := Now;
   dm.cdsVendasVALOR_TOTAL.AsFloat := 0.00;
 end;
+
+
 
 
 
